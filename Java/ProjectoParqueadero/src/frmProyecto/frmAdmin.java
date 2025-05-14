@@ -101,7 +101,7 @@ public class frmAdmin extends javax.swing.JFrame {
         lbTitulo.setToolTipText("");
         lbTitulo.setPreferredSize(new java.awt.Dimension(69, 60));
 
-        menuReportes.setText("REPORTES");
+        menuReportes.setText("ADMIN");
 
         jMenuItem2.setText("REPORTES INDIVIDUALES");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {

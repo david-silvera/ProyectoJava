@@ -25,7 +25,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="menuReportes">
           <Properties>
-            <Property name="text" type="java.lang.String" value="REPORTES"/>
+            <Property name="text" type="java.lang.String" value="ADMIN"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
