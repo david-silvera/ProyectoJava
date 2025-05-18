@@ -33,6 +33,16 @@ CREATE TABLE Transaccion_Independiente (
     metodoPago VARCHAR(20),
     totalPago DOUBLE
 );
+CREATE TABLE Incidente (
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    descripcion TEXT NOT NULL,
+    fechaIncidente DATETIME,
+    tipoIncidente VARCHAR(50),
+    Usuario VARCHAR(50),
+     montoMulta DOUBLE ,
+	fkTransaccion INT NOT NULL,
+    CONSTRAINT fk_incidente_transaccion FOREIGN KEY (fkTransaccion) REFERENCES Parqueadero.Transaccion_Independiente(id)
+);
 
     
  INSERT INTO persona (nombre, apellido, telefono, correo, direccion) 
@@ -115,6 +125,18 @@ BEGIN
     WHERE tipoVehiculo = p_tipoVehiculo
     LIMIT 1;
 END; //
+
+CREATE PROCEDURE ObtenerVehiculosConTransaccionActiva()
+BEGIN
+    SELECT 
+        t.id AS idTransaccion,
+        v.placa,
+        v.tipoVehiculo
+    FROM Vehiculo v
+    INNER JOIN Transaccion_Independiente t ON v.id = t.fkVehiculo
+    WHERE t.fechaSalida IS NULL;
+END; //
+
 
 CREATE PROCEDURE GestionarVehiculo( IN p_placa VARCHAR(6), IN p_tipoVehiculo VARCHAR(30), OUT p_idVehiculo INT)
 BEGIN
@@ -213,19 +235,27 @@ BEGIN
     DECLARE v_fechaEntrada DATETIME;
     DECLARE v_fechaSalida DATETIME;
     DECLARE v_tarifaBase DOUBLE;
-	
+    DECLARE v_pagoBase DOUBLE;
+    DECLARE v_montoMultas DOUBLE DEFAULT 0;
 
     SELECT ti.fechaEntrada, ti.fechaSalida, ta.tarifaBase
     INTO v_fechaEntrada, v_fechaSalida, v_tarifaBase
     FROM transaccion_independiente ti
     INNER JOIN tarifa ta ON ti.fkTarifa = ta.id
     WHERE ti.id = p_idTransaccion;
-    
+
     IF v_fechaEntrada IS NULL OR v_fechaSalida IS NULL THEN
         SET p_totalPago = -1; 
     ELSE
 
-        SET p_totalPago = calcularPago(v_tarifaBase, v_fechaEntrada, v_fechaSalida);
+        SET v_pagoBase = calcularPago(v_tarifaBase, v_fechaEntrada, v_fechaSalida);
+
+        SELECT IFNULL(SUM(montoMulta), 0)
+        INTO v_montoMultas
+        FROM incidente
+        WHERE fkTransaccion = p_idTransaccion;
+
+        SET p_totalPago = v_pagoBase + v_montoMultas;
 
         UPDATE transaccion_independiente 
         SET totalPago = p_totalPago 
@@ -233,26 +263,19 @@ BEGIN
     END IF;
 END; //
 
-
-CREATE PROCEDURE obtenerTransacciones(placaBuscada varchar(6))
+CREATE PROCEDURE obtenerTransaccionesPorUsuario(usuarioIngreso VARCHAR(50))
 BEGIN
     SELECT 
         vi.placa AS 'Placa',
-        vi.tipoVehiculo AS 'Tipo de Vehículo',
-        ti.ingreso AS 'Ingresado por',
         ti.fechaEntrada AS 'Fecha de Entrada',
-        ti.fechaSalida AS 'Fecha de Salida',
-        ti.salida AS 'Retirado por',
         ti.metodoPago AS 'Método de Pago',
-        ta.tarifaBase AS 'Tarifa',
-        ti.totalPago AS 'Total a Pagar'
+        vi.tipoVehiculo AS 'Tipo de Vehículo'
     FROM transaccion_independiente ti
     INNER JOIN vehiculo vi ON ti.fkVehiculo = vi.id
-    INNER JOIN tarifa ta ON ti.fkTarifa = ta.id
-	WHERE vi.placa = placaBuscada
-    ORDER BY ti.fechaSalida DESC
-    LIMIT 1;
-END; //
+    WHERE ti.ingreso = usuarioIngreso
+    ORDER BY ti.fechaEntrada DESC;
+END;
+
 CREATE PROCEDURE obtenerTodasTransacciones()
 BEGIN
     SELECT 
@@ -281,6 +304,7 @@ BEGIN
     
     RETURN total;
 END;//
+
 CREATE PROCEDURE obtenerTransaccionesPorFecha(
     IN fechaInicio DATE,
     IN fechaFin DATE
@@ -420,6 +444,17 @@ CREATE PROCEDURE obtenerPrecioTarifas(in p_tipoVehiculo VARCHAR(20) , OUT p_prec
     LIMIT 1;
 
 END;//
+CREATE PROCEDURE InsertarIncidente (
+    IN p_idTransaccion INT,
+    IN p_nombre VARCHAR(50),
+    IN p_tipoIncidente VARCHAR(50),
+    IN p_descripcion TEXT,
+    IN p_monto DOUBLE
+)
+BEGIN
+    INSERT INTO Incidente (descripcion, fechaIncidente, tipoIncidente,Usuario, montoMulta, fkTransaccion) VALUES 
+    (p_descripcion,now(),p_tipoIncidente,p_nombre,p_monto,p_idTransaccion);
+END; //
 
 select * from persona;//
   select * from vehiculo ;//

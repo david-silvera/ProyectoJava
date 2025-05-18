@@ -77,10 +77,12 @@ public class frmAdmin extends javax.swing.JFrame {
         menuAdmin = new javax.swing.JMenuBar();
         menuReportes = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         tarifasitem = new javax.swing.JMenuItem();
         menuEditores = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         menuSalir = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -111,6 +113,14 @@ public class frmAdmin extends javax.swing.JFrame {
         });
         menuReportes.add(jMenuItem2);
 
+        jMenuItem9.setText("REPORTE MULTAS O INCIDENTES");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        menuReportes.add(jMenuItem9);
+
         tarifasitem.setText("TARIFAS");
         tarifasitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,6 +148,14 @@ public class frmAdmin extends javax.swing.JFrame {
             }
         });
         menuEditores.add(jMenuItem8);
+
+        jMenuItem5.setText("INCIDENTE O MULTA");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        menuEditores.add(jMenuItem5);
 
         menuAdmin.add(menuEditores);
 
@@ -250,6 +268,17 @@ public class frmAdmin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_tarifasitemActionPerformed
 
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        frmInicidentes frmin = new frmInicidentes(idU);
+        frmin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -262,9 +291,11 @@ public class frmAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JLabel lbNombreUsuario;
     private javax.swing.JLabel lbTitulo;
     private javax.swing.JMenuBar menuAdmin;

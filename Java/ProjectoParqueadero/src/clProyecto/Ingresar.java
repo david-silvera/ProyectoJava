@@ -132,5 +132,24 @@ public void transacciones(String placa, int tarifa, String metodoPago, double to
         e.printStackTrace();
     }
 }
+public void igresarIncidente(String descripcion ,String tipoIncidente,String Usuario,int idTransaccion, double monto){
+    
+        try {
+             Connection db = dbConection.conectar();
+            CallableStatement cs = db.prepareCall("{CALL InsertarIncidente(?, ?, ?, ?, ?)}");
+
+            cs.setInt(1, idTransaccion);
+            cs.setString(2, Usuario);
+            cs.setString(3, tipoIncidente);
+            cs.setString(4, descripcion);
+            cs.setDouble(5, monto);
+
+            cs.execute();
+            cs.close();
+            db.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    }
 
 }

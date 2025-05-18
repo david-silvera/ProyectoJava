@@ -33,6 +33,7 @@ public class frmSacarVehiculo extends javax.swing.JFrame {
         txtPlaca.setText("");
         this.idU=id;
          buscarNombre();
+         mostrarInfo();
         
     }
 
@@ -56,12 +57,12 @@ public class frmSacarVehiculo extends javax.swing.JFrame {
     public void mostrarInfo(){
 
          DefaultTableModel modelo = new DefaultTableModel();
-    String query = "CALL obtenerTransacciones(?)";
+    String query = "{CALL obtenerTransaccionesPorUsuario(?)}";
 
     try (Connection db = dbConection.conectar();
          CallableStatement cs = db.prepareCall(query);) {
         
-          cs.setString(1, placa);
+          cs.setString(1, nombre);
             
          ResultSet rs = cs.executeQuery();
 
@@ -142,7 +143,7 @@ public class frmSacarVehiculo extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tablePrueba);
 
-        btnBuscar.setText("Buscar");
+        btnBuscar.setText("Sacar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -225,6 +226,7 @@ public class frmSacarVehiculo extends javax.swing.JFrame {
 
         try{
             busacarPlaca();
+            mostrarInfo();
           
         }catch(Exception e){
             JOptionPane.showMessageDialog(rootPane, "Hubo un error");
