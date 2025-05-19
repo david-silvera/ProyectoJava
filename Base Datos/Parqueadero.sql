@@ -43,6 +43,31 @@ CREATE TABLE Incidente (
 	fkTransaccion INT NOT NULL,
     CONSTRAINT fk_incidente_transaccion FOREIGN KEY (fkTransaccion) REFERENCES Parqueadero.Transaccion_Independiente(id)
 );
+CREATE TABLE Tarifa_Copia (
+    idAuditoria INT PRIMARY KEY AUTO_INCREMENT,
+    accion VARCHAR(10),
+    idTarifaAnterior INT,
+    tipoVehiculoAnterior VARCHAR(30),
+    tarifabaseAnterior double,
+    idTarifaNuevo INT,
+    tipoVehiculoNuevo VARCHAR(30),
+    tarifabaseNueva double,
+    fechaAccion DATETIME DEFAULT NOW()
+);
+CREATE TABLE transaccion_independiente_copia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fkVehiculo INT NOT NULL,
+    fkTarifa INT NOT NULL,
+    ingreso VARCHAR(100),
+    salida VARCHAR(100),
+    fechaEntrada DATETIME,
+    fechaSalida DATETIME,
+    metodoPago VARCHAR(20),
+    totalPago DOUBLE,
+    fechaAccion DATETIME DEFAULT NOW()
+);
+
+
 
     
  INSERT INTO persona (nombre, apellido, telefono, correo, direccion) 
@@ -455,9 +480,64 @@ BEGIN
     INSERT INTO Incidente (descripcion, fechaIncidente, tipoIncidente,Usuario, montoMulta, fkTransaccion) VALUES 
     (p_descripcion,now(),p_tipoIncidente,p_nombre,p_monto,p_idTransaccion);
 END; //
+CREATE PROCEDURE ObtenerIncidentesPorTransaccion ()
+BEGIN
+    SELECT v.placa,i.descripcion,i.fechaIncidente, i.tipoIncidente,i.Usuario,i.montoMulta FROM Incidente i inner join transaccion_independiente ti on i.fkTransaccion=ti.id inner join vehiculo v on ti.fkVehiculo=v.id;
+END; //
+
+CREATE TRIGGER tarifa_copia_after_update
+AFTER UPDATE ON tarifa
+FOR EACH ROW
+BEGIN
+    INSERT INTO Tarifa_Copia (
+        accion, 
+        idTarifaAnterior, tipoVehiculoAnterior, tarifabaseAnterior, 
+        idTarifaNuevo, tipoVehiculoNuevo, tarifabaseNueva
+    )
+    VALUES (
+        'UPDATE',
+        OLD.id, OLD.tipoVehiculo, OLD.tarifabase,
+        NEW.id, NEW.tipoVehiculo, NEW.tarifabase
+    );
+END;//
+
+CREATE TRIGGER transaccion_independiente_after_update
+AFTER UPDATE ON Transaccion_Independiente
+FOR EACH ROW
+BEGIN
+if old.totalpago <> new.totalpago then
+    INSERT INTO Transaccion_Independiente_Copia (
+        fkVehiculo, 
+        fkTarifa,
+        ingreso,
+        salida,
+        fechaEntrada,
+        fechaSalida,
+        metodoPago,
+        totalPago,
+        fechaAccion
+    )
+    VALUES (
+		NEW.fkVehiculo,
+        NEW.fkTarifa,
+        NEW.ingreso,
+        NEW.salida,
+        NEW.fechaEntrada,
+        NEW.fechaSalida,
+		NEW.metodoPago,
+        NEW.totalPago,
+        NOW()
+    );
+    end if;
+END;//
+
+
+
+
 
 select * from persona;//
   select * from vehiculo ;//
     select * from transaccion_independiente ;//
     select * from usuario ;//
     select * from tarifa;//
+    SELECT * FROM Incidente i inner join transaccion_independiente ti on i.fkTransaccion=ti.id inner join vehiculo v on ti.fkVehiculo=v.id;//

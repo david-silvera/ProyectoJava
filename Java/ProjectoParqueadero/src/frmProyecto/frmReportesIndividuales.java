@@ -324,7 +324,7 @@ try (Connection db = dbConection.conectar();
     JOptionPane.showMessageDialog(null, "Error al obtener las transacciones y ganancias: " + ex.getMessage());
 }
 }
-    
+     
    public void mostrarInfo() {
         total=0;
         obtenerTotalRecaudado();

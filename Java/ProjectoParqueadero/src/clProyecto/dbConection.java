@@ -7,7 +7,7 @@ public class dbConection {
     
      static String url="jdbc:mysql://localhost:3306/Parqueadero";
     static String user="root";
-   static String pass="2006frank";
+   static String pass="1234";
       public static Connection conectar()
     {
        Connection con=null;

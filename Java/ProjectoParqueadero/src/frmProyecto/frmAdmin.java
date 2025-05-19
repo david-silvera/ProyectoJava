@@ -71,13 +71,14 @@ public class frmAdmin extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         lbNombreUsuario = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lbTitulo = new javax.swing.JLabel();
         menuAdmin = new javax.swing.JMenuBar();
         menuReportes = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        multas = new javax.swing.JMenuItem();
         tarifasitem = new javax.swing.JMenuItem();
         menuEditores = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -92,6 +93,9 @@ public class frmAdmin extends javax.swing.JFrame {
         jMenuItem4.setText("jMenuItem4");
 
         jMenuItem6.setText("jMenuItem6");
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,13 +117,13 @@ public class frmAdmin extends javax.swing.JFrame {
         });
         menuReportes.add(jMenuItem2);
 
-        jMenuItem9.setText("REPORTE MULTAS O INCIDENTES");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+        multas.setText("REPORTE MULTAS O INCIDENTES");
+        multas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
+                multasActionPerformed(evt);
             }
         });
-        menuReportes.add(jMenuItem9);
+        menuReportes.add(multas);
 
         tarifasitem.setText("TARIFAS");
         tarifasitem.addActionListener(new java.awt.event.ActionListener() {
@@ -275,9 +279,12 @@ public class frmAdmin extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+    private void multasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_multasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
+        frmReporteMultas frMultas = new frmReporteMultas(idU);
+        frMultas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_multasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -285,6 +292,7 @@ public class frmAdmin extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -295,13 +303,13 @@ public class frmAdmin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JLabel lbNombreUsuario;
     private javax.swing.JLabel lbTitulo;
     private javax.swing.JMenuBar menuAdmin;
     private javax.swing.JMenu menuEditores;
     private javax.swing.JMenu menuReportes;
     private javax.swing.JMenu menuSalir;
+    private javax.swing.JMenuItem multas;
     private javax.swing.JMenuItem tarifasitem;
     // End of variables declaration//GEN-END:variables
 }
