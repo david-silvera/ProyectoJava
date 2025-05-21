@@ -44,15 +44,11 @@ CREATE TABLE Incidente (
     CONSTRAINT fk_incidente_transaccion FOREIGN KEY (fkTransaccion) REFERENCES Parqueadero.Transaccion_Independiente(id)
 );
 CREATE TABLE Tarifa_Copia (
-    idAuditoria INT PRIMARY KEY AUTO_INCREMENT,
-    accion VARCHAR(10),
-    idTarifaAnterior INT,
-    tipoVehiculoAnterior VARCHAR(30),
-    tarifabaseAnterior double,
-    idTarifaNuevo INT,
-    tipoVehiculoNuevo VARCHAR(30),
-    tarifabaseNueva double,
-    fechaAccion DATETIME DEFAULT NOW()
+    idTarifa INT,
+    tipoVehiculo VARCHAR(30),
+    tarifabase double,
+    fechaAccion DATETIME,
+    dato VARCHAR(20)
 );
 CREATE TABLE transaccion_independiente_copia (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -485,20 +481,14 @@ BEGIN
     SELECT v.placa,i.descripcion,i.fechaIncidente, i.tipoIncidente,i.Usuario,i.montoMulta FROM Incidente i inner join transaccion_independiente ti on i.fkTransaccion=ti.id inner join vehiculo v on ti.fkVehiculo=v.id;
 END; //
 
-CREATE TRIGGER tarifa_copia_after_update
+CREATE TRIGGER tarifacopia
 AFTER UPDATE ON tarifa
 FOR EACH ROW
 BEGIN
-    INSERT INTO Tarifa_Copia (
-        accion, 
-        idTarifaAnterior, tipoVehiculoAnterior, tarifabaseAnterior, 
-        idTarifaNuevo, tipoVehiculoNuevo, tarifabaseNueva
-    )
-    VALUES (
-        'UPDATE',
-        OLD.id, OLD.tipoVehiculo, OLD.tarifabase,
-        NEW.id, NEW.tipoVehiculo, NEW.tarifabase
-    );
+    INSERT INTO tarifa_copia(idTarifa, tipoVehiculo, tarifabase, fechaAccion, dato)
+    VALUES (old.id,old.tipoVehiculo , old.tarifaBase,now(),'VIEJO');
+      INSERT INTO tarifa_copia(idTarifa, tipoVehiculo, tarifabase, fechaAccion, dato)
+    VALUES (new.id,new.tipoVehiculo , new.tarifaBase,now(),'NUEVO');
 END;//
 
 CREATE TRIGGER transaccion_independiente_after_update

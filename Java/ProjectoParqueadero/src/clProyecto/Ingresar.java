@@ -22,54 +22,6 @@ public class Ingresar {
         
     }
     
-        public void ingresarPersona(String nombre ,String apellido,String telefono,String correo,String direccion ){
-            String query = "select ifnull((SELECT id FROM persona WHERE nombre = ? AND apellido = ?  LIMIT 1), 0) as resultado ;";
-             try  { 
-                Connection db = dbConection.conectar();
-                PreparedStatement ps = db.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-
-               ps.setString(1, nombre);
-               ps.setString(2, apellido);
-
-               ResultSet resultSet = ps.executeQuery();
-
-               if (resultSet.next()) {
-                
-                 idPersona=resultSet.getInt("resultado");
-               
-                if (idPersona >0) {
-                   
-                    System.out.println("Persona existente");
-                   
-                } else {
-                 
-                     String query2="insert into Persona ( nombre , apellido, telefono, correo , direccion ) values(?,?,?,?,?)";
-                     try{
-                         PreparedStatement psI = db.prepareStatement(query2, PreparedStatement.RETURN_GENERATED_KEYS);
-                        psI.setString(1, nombre);
-                        psI.setString(2, apellido);
-                        psI.setString(3, telefono);
-                        psI.setString(4, correo);
-                        psI.setString(5, direccion);
-
-                        psI.executeUpdate();
-                        ResultSet rs = psI.getGeneratedKeys();
-                        if (rs.next()) {
-                             idPersona = rs.getInt(1); 
-                        }
-                        
-                          
-                }catch(SQLException ex){
-                    ex.printStackTrace();
-                }    
-              }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-     
-    
-    }
     
     
     public void igresarVehiculo(String placa ,String tipoVehiculo){
